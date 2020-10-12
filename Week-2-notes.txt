@@ -1,0 +1,45 @@
+Senin, 12 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Openwhisk Load Balancer (LB)
+
+1. What does LB do?
+
+A LB's job is to decide which invoker will be used for an incoming activation request.
+
+2. How does LB choose invokers?
+
+For every pair of namespace + action, LB choose an invoker as a home-invoker for the pair based on the pair's hash and number of invokers. Every activation request will start at their respective home-invoker if the invoker passed "health checking" and "capacity checking", if not, LB will check for next available invoker. The index of the invoker checked next is current index incremented by "step-size". "Step-size" is picked from list of coprime numbers of numInvokers that is less than numInvokers. "Step-size in then chose by calculating hash % numStepSize.
+
+If no invokers are available LB will return an error.
+
+> Example:
+hash for namespace + action pair                       : 35
+number of invokers                                     : 15 (all healthy)
+home-invoker                         	          : 35 % 15 = 5 (home-invoker is invoker with index 5)
+coprimes of numInvokers that are less than numInvokers : [1, 2, 4, 6, 7, 8, 11, 13, 14]
+step-size index					 : hash % numStepSize = 35 % 9 = 8
+step-size					 : coprime[8] = 14
+
+Progression to check the invokers: 5, 4, 3, 2, 1, 0, 14, 13, 12, 11, 10, 9, 8, 7, 6.
+Starting with invoker index 5, then invoker index (5 + stepSize) % (stepSize + 1).
+
+3. Capacity Checking
+
+User can assign maximum amount of memory an invoker can use. Consider an invoker can use 256mb of memory at max (this is the default) and the invoker already using 56mb, LB will know that this invoker can only be assigned an activation that use 200mb or less memory. If the invoker finished an activation that requires 30mb of memory, LB will know that now this invoker has 30mb more of free memory.
+
+4. Health Checking
+
+There are 4 possible results of health checking an invoker: offline, unhealthy, unresponsive, and healthy.
+
+a. Offline: Invoker pings LB every second. If LB doesn't receive any pings from an invoker, the invoket=r is considered offline.
+b. Unhealhy: This happens when from the last 10 activations at least 3 of them contained system error.
+c. Unresponsive: 
+d. If an invoker is neither offline, unhealthy, or unresponsive, it is considered healthy.
+
+5. Horizontal Sharding
+
+Horizontal sharding is done to separate an invoker's capacity. For n LBs, the invoker's capacity will be divided evenly among the n LBs.
+
+
