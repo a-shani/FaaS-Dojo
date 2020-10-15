@@ -1,0 +1,32 @@
+Selasa, 13 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Openwhisk Invoker
+
+An invoker is a docker container that made from image of a runtime. If LB tells an invoker to invoke a Node.js function, then the invoker a Node.js container.
+
+There are 2 steps of invoking an action:
+1. Initializaion
+When "/init" endpoint of an invoker is hit, it will initialize.
+
+2. Run
+When endpoint "/run" is invoked that's when the action is actially invoked.
+
+LB choose an invoker from the containter pool. There are 2 container pools:
+1. Normal Pool
+2. Pre Warm Pool
+
+LB will look for available container in normal pool. When a container is chose, it then belongs to the corresponding action. Any invocation that come again for that function will be handled by the container. When all invokers are used and there is an incoming invocation request, an invoker container will be deleted and a new container will be made.
+
+If LB cannot find any available invoker in normal pool it will look for container in pre warmed pool.
+
+Result of invocation will be stored in DB and sent back to client via HTTP through NGINX, so When a client doesn't get response from an invocation the problem could be in the network.
+
+There are 4 statuses of an invocation:
+1. success		status code: 0
+2. application error	status code: 1
+3. action developer error	status code: 2
+4. whisk internal error	status code: 3
+
+Whisk internal error is system error explained in previous note, it can cause an invoker to be considered unhealthy.

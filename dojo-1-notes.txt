@@ -1,0 +1,7 @@
+Jumat, 09 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Openwhisk Controller
+
+An Openwhisk Controller receives http request from NGINX and translate what a user is trying to do based on the request. For ecxample if the HTTP request is a POST to an action, the controller will translate it as "the user wants to invoke an action".
