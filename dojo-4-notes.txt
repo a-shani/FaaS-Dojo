@@ -1,0 +1,24 @@
+Jumat, 16 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Activation
+
+
+2 parts of activation:
+
+1. Initialize:
+Action code is sent to container and stored there.
+
+2. Run:
+Action params are sent to the container and action is run.
+
+Initialization only happen if there is no available container.
+
+If logCollectionLimit is not 0, logs will be collected.
+
+On AWS deployment of FaaS, logs collection is disabled to enable concurrency.
+
+After invocation is done, result will be stored in database.
+
+Result of an invocation is a future object (like promise in javascript) and can be retrieved using invocationId.
