@@ -1,0 +1,16 @@
+Jumat, 23 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Terraform
+
+Yang instances:
+faas_instances
+fas_monitoring
+gage_instances
+
+VPC ada defaultnya, tapi bisa dicustom juga.
+
+Kalo 2 vpc mau dihubungin, subnetnya harus beda.
+
+Kalo mau nyoba nyoba pake us-east-2, paling murah dan udah banyak infra yg dideploy di sana.

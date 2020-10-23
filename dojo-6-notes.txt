@@ -1,0 +1,25 @@
+Rabu, 21 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: SPI Loader
+
+SPI = Service provider interface?
+gunanya supaya ow bisa pake konfigurasi kita (konfigurasi untuk entry pointnya, jadi kita bisa modif entry pointnya gitu. misalnya ArtifactStoreProvider)
+
+
+SPI itu untuk ngespecify configuration sebelum deploy ow, misal mau pake DB couchDB atau mongoDB, itu dipecify pake ArtifactStoreProvider.
+Trait ArtifactStoreProvider itu extends Spi.
+
+Sebelum jalanin ansible harus ada:
+faas-ansible
+openwhisk
+faas-gage-event-feed
+
+semuanya harus sejajar direktorinya
+Ansible versi 2.9.x
+
+pertama jalanin spc-setup.yml
+
+intallDepsUbuntu.yml bisa dipake buat nambahin deps di ubuntu, di "set packages to install"
+

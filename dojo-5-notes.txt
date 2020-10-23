@@ -1,0 +1,26 @@
+Senin, 19 Oktober 2020
+
+FaaS Internal Dojo
+
+Topic: Openwhisk configuration
+
+File application.conf isinya ada yg kaya JSON, namanya hocon. yang akka.http bla bla bla di file .conf .conf
+
+Config di dunia JVM disebutnya properties, properties bisa diset pake .conf files atau diload dari ENV variable
+
+Pertama app.conf cek default value yg didefine di required properties dulu, kalo gaada dia akan cek ENV var.
+ENV var FOO_BAR digunakan sebagai value untuk properti foo.bar/FoO.bAr (case insensitive).
+
+Semua REST API butuh whisk config. (Tulisannya whisk.config?)
+
+class WhiskConfig itu load properties yang berbeda dengan hocon.
+
+Openwhisk use purConfig dependency.
+
+Cek docs di transformEnvironment.sh, di folder common. Hasil yg di examplenya itu (yg awalnya -D) bisa diload sama pureConfig
+
+Cek WhiskConfig.scala
+
+Dojo kemaren: activation akan berenti kalo dapet "ACK completed", dicapai dengan jalanin action, ambil log dan dimasukin dalem activation document, baru controller nyatet ini udah selesai dan bisa nerima next job. Kalo action blocking dia langsung ngirim ACK result message, ga nunggu sampoe dapet ACK completed. Habis logsnya dikumpulin baru ngirim ActiveAck yg completion.
+
+Next dojo masuk ansible.
